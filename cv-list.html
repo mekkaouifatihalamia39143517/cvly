@@ -62,7 +62,6 @@
     </div>
 
     <script>
-        // التحقق من تسجيل الدخول
         if (!localStorage.getItem('cvly_user')) {
             window.location.href = "login.html";
         }
@@ -72,7 +71,6 @@
             const cvs = JSON.parse(localStorage.getItem('myCVs')) || [];
 
             if (cvs.length === 0) {
-                // Empty State الجميل
                 cvDisplay.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-folder-open"></i>
@@ -85,7 +83,6 @@
                 return;
             }
 
-            // عرض الـ CVs الموجودة
             let html = '<div class="cv-grid">';
             cvs.forEach((cv, index) => {
                 html += `
@@ -119,7 +116,7 @@
                 let cvs = JSON.parse(localStorage.getItem('myCVs'));
                 cvs.splice(index, 1);
                 localStorage.setItem('myCVs', JSON.stringify(cvs));
-                loadCVs(); // إعادة تحميل القائمة
+                loadCVs(); 
             }
         }
 
@@ -130,7 +127,6 @@
             }
         }
 
-        // تشغيل الدالة عند فتح الصفحة
         window.onload = loadCVs;
     </script>
 </body>

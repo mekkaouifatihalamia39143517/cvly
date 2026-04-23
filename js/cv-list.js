@@ -1,4 +1,3 @@
-// دالة التوجيه لإنشاء CV جديد (تمسح الـ index لضمان بداية صفحة بيضاء)
 function startNew() {
     localStorage.removeItem('editingIndex');
     window.location.href = 'cv-builder.html';
@@ -8,15 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCVs();
 });
 
-// الدالة الأساسية لجلب وعرض الـ CVs
 function loadCVs() {
-    const cvListContainer = document.getElementById('cvList'); // تأكدي أن id الحاوية هو cvList
+    const cvListContainer = document.getElementById('cvList'); 
     const emptyState = document.getElementById('empty-state');
     
-    // جلب البيانات الحقيقية من المتصفح
     const savedCVs = JSON.parse(localStorage.getItem('myCVs')) || [];
 
-    // تنظيف الحاوية قبل الرسم
     cvListContainer.innerHTML = "";
 
     if (savedCVs.length === 0) {
@@ -53,23 +49,20 @@ function loadCVs() {
     }
 }
 
-// دالة التعديل: تحفظ الـ index وتنتقل للمحرر
 function editCV(index) {
     localStorage.setItem('editingIndex', index);
     window.location.href = 'cv-builder.html';
 }
 
-// دالة الحذف: تحذف من المصفوفة وتعيد الحفظ
 function deleteCV(index) {
     if (confirm("Are you sure you want to delete this CV?")) {
         let list = JSON.parse(localStorage.getItem('myCVs')) || [];
-        list.splice(index, 1); // حذف العنصر
-        localStorage.setItem('myCVs', JSON.stringify(list)); // حفظ القائمة الجديدة
-        loadCVs(); // إعادة رسم الصفحة
+        list.splice(index, 1); 
+        localStorage.setItem('myCVs', JSON.stringify(list));
+        loadCVs(); 
     }
 }
 
-// دالة تسجيل الخروج
 function logout() {
     localStorage.removeItem('cvly_user');
     window.location.href = 'index.html';

@@ -1,4 +1,4 @@
-// 🔥 CVLY Builder - Complete Enhanced Version
+//  CVLY Builder - Complete Enhanced Version
 class CVLY {
     constructor() {
         this.cvData = {
@@ -455,7 +455,7 @@ class CVLY {
     }
 }
 
-// 💾 Local Storage Manager
+//  Local Storage Manager
 class CVStorage {
         static saveCV(cvData, title = 'My CV') {
         const cvs = JSON.parse(localStorage.getItem('cvly_cvs') || '[]');
@@ -495,7 +495,7 @@ class CVStorage {
     }
 }
 
-// 🚀 Initialize
+//  Initialize
 let cvly;
 document.addEventListener('DOMContentLoaded', () => {
     cvly = new CVLY();

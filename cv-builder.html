@@ -39,38 +39,36 @@
 
         /* Layout */
         .builder-header { background: white; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; }
-       /* التنسيق الأساسي للشاشات الكبيرة */
         .main-layout {
             display: flex;
-            flex-direction: row; /* جنب بعض في الكمبيوتر */
+            flex-direction: row; 
             flex: 1;
             overflow: hidden;
         }
 
-        /* التنسيق الخاص بالتيليفون (شاشات أقل من 768px) */
         @media (max-width: 768px) {
                body {
-                  overflow-y: auto; /* السماح بالتمرير في التيليفون */
+                  overflow-y: auto; 
                }
                .main-layout {
-                    flex-direction: column; /* فوق بعض في التيليفون */
+                    flex-direction: column; 
                     overflow: visible;
                }
                .editor-sidebar {
-                    width: 100% !important; /* يأخذ العرض كامل */
+                    width: 100% !important; 
                     border-right: none;
                     padding: 10px;
                }
                .preview-container {
                     width: 100% !important;
                     padding: 10px;
-                    background: #f1f5f9; /* تغيير الخلفية لتمييز المعاينة */
+                    background: #f1f5f9; 
                }
               .cv-page {
-                    width: 100% !important; /* الـ CV يتمدد على عرض الشاشة */
+                    width: 100% !important; 
                     min-height: auto;
                     padding: 15px;
-                    transform: scale(0.9); /* تصغير بسيط ليناسب الشاشة */
+                    transform: scale(0.9); 
                     transform-origin: top center;
                 }
            }
@@ -341,12 +339,11 @@ function saveCV() {
     const experiences = [];
     document.querySelectorAll('#expContainer > div').forEach(div => {
         const ins = div.querySelectorAll('input, textarea');
-        // نتأكد أن الحقول موجودة قبل القراءة
         if(ins.length >= 2 && (ins[0].value || ins[1].value)) {
             experiences.push({
                 c1: ins[0].value,
                 c2: ins[1].value,
-                c3: ins[2] ? ins[2].value : "" // تأمين في حال عدم وجود textarea
+                c3: ins[2] ? ins[2].value : "" 
             });
         }
     });
@@ -360,24 +357,21 @@ function saveCV() {
         link: document.getElementById('inLink').value || "",
         web: document.getElementById('inWeb').value || "",
         summary: document.getElementById('inSum').value || "",
-        skills: typeof tags !== 'undefined' ? tags : [], // التأكد من وجود المتغير tags
+        skills: typeof tags !== 'undefined' ? tags : [], 
         exp: experiences,
         date: new Date().toLocaleDateString()
     };
 
     let list = JSON.parse(localStorage.getItem('myCVs')) || [];
     
-    // جلب الـ Index والتأكد من أنه رقم
     let editIndex = localStorage.getItem('editingIndex');
 
-    // التصحيح الجوهري هنا: نتحقق هل القيمة ليست null وليست نصاً فارغاً
     if (editIndex !== null && editIndex !== "") {
-        list[parseInt(editIndex)] = cvFullData; // نحوله لرقم ونحدث البيانات
+        list[parseInt(editIndex)] = cvFullData; 
     } else {
-        list.push(cvFullData); // إضافة CV جديد
+        list.push(cvFullData); 
     }
 
-    // حفظ القائمة ومسح الـ index لكي لا يفتح التعديل بالخطأ المرة القادمة
     localStorage.setItem('myCVs', JSON.stringify(list));
     localStorage.removeItem('editingIndex'); 
 
@@ -391,10 +385,8 @@ function saveCV() {
         const data = list[editIndex];
 
         if (data) {
-            // إخفاء نافذة الاختيار لأن الـ CV قديم
             document.getElementById('typeModal').style.display = 'none';
 
-            // ملء الحقول الأساسية
             document.getElementById('inName').value = data.name || "";
             document.getElementById('inJob').value = data.job || "";
             document.getElementById('inEmail').value = data.email || "";
@@ -404,32 +396,26 @@ function saveCV() {
             document.getElementById('inWeb').value = data.web || "";
             document.getElementById('inSum').value = data.summary || "";
 
-            // استرجاع المهارات
             if (data.skills) {
                 tags = data.skills;
                 renderTags();
             }
 
-            // استرجاع الخبرات
             if (data.exp) {
                 data.exp.forEach(item => {
-                    // نستخدم دالة addEntry الأصلية لإضافة الحقول
                     addEntry('expContainer', 'pv-exp-list', 'Company', 'Role');
                     
-                    // نملأ آخر حقول تمت إضافتها بالبيانات
                     const lastEntry = document.querySelector('#expContainer').lastElementChild;
                     const inputs = lastEntry.querySelectorAll('input, textarea');
                     inputs[0].value = item.c1;
                     inputs[1].value = item.c2;
                     inputs[2].value = item.c3;
                     
-                    // تحديث المعاينة لهذه الخبرة (نحتاج لاستخراج الـ ID من الـ div)
                     const id = lastEntry.id.replace('f-', '');
                     syncEntry(id);
                 });
             }
 
-            // تحديث المعاينة النهائية للمعلومات الأساسية
             up(); 
         }
     }
