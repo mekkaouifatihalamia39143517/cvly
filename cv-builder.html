@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVLY PRO - Professional Full Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2563eb; --bg: #f1f5f9; --text: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+        @media print {
+            .builder-header, .editor-sidebar, .template-bar, #typeModal { display: none !important; }
+            body, .main-layout, .preview-container { background: white !important; display: block !important; overflow: visible !important; height: auto !important; }
+            .cv-page { box-shadow: none !important; margin: 0 !important; width: 100% !important; border: none !important; }
+        }
+        
+        /* Modal Selection */
+        #typeModal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: white; padding: 40px; border-radius: 24px; text-align: center; max-width: 850px; width: 90%; }
+        .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .type-card { border: 2px solid #f1f5f9; padding: 25px; border-radius: 16px; cursor: pointer; transition: 0.3s; }
+        .type-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .type-card i { font-size: 40px; color: var(--primary); margin-bottom: 15px; }
+
+        /* Layout */
+        .builder-header { background: white; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; }
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Sidebar */
+        .editor-sidebar { width: 480px; background: white; border-right: 1px solid #e2e8f0; overflow-y: auto; padding: 20px; }
+        .section-card { background: #f8fafc; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        h3 { font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: var(--text); border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; box-sizing: border-box; font-family: inherit; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .btn-add { background: #dbeafe; color: var(--primary); border: none; padding: 8px; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 5px; }
+        .btn-add:hover { background: var(--primary); color: white; }
+
+        /* Photo Upload Design */
+        .photo-uploader { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 12px; background: white; }
+        #uploadTrigger { width: 60px; height: 60px; border-radius: 10px; background: #f8fafc; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background-size: cover; background-position: center; border: 1px solid #e2e8f0; }
+
+        /* Preview Area */
+        .preview-container { flex: 1; background: #525659; display: flex; flex-direction: column; align-items: center; padding: 30px; overflow-y: auto; }
+        .template-bar { background: rgba(255,255,255,0.15); padding: 10px 25px; border-radius: 50px; margin-bottom: 20px; display: flex; gap: 15px; backdrop-filter: blur(10px); }
+        .temp-btn { background: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 700; }
+        .temp-btn.active { background: var(--primary); color: white; }
+
+        .cv-page { background: white; width: 210mm; min-height: 297mm; padding: 20mm; box-shadow: 0 20px 50px rgba(0,0,0,0.4); box-sizing: border-box; transition: 0.4s; position: relative; }
+        
+        /* Templates Styles */
+        .tmpl-modern .sec-title { color: var(--primary); border-bottom: 2px solid #eee; text-transform: uppercase; font-size: 13px; margin: 18px 0 8px; font-weight: 800; letter-spacing: 1px;}
+        .tmpl-classic { font-family: 'Times New Roman', serif; }
+        .tmpl-classic .cv-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .tmpl-classic .sec-title { text-align: center; border-top: 1px solid #333; border-bottom: 1px solid #333; margin: 15px 0; padding: 4px; font-style: italic; font-size: 14px; }
+        .tmpl-royal { font-family: 'Playfair Display', serif; }
+        .tmpl-royal .cv-header { background: #1e293b; color: white; padding: 30px; margin: -20mm -20mm 20px -20mm; }
+        .tmpl-royal .sec-title { border-left: 5px solid #fbbf24; padding-left: 10px; background: #fef3c7; color: #1e293b; font-size: 14px; }
+
+        .p-photo { width: 110px; height: 110px; border-radius: 12px; object-fit: cover; float: right; display: none; border: 2px solid #eee; }
+        .tag-box { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .tag { background: #f1f5f9; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 8px;}
+    </style>
+</head>
+<body>
+
+    <div id="typeModal">
+        <div class="modal-content">
+            <h1>Select CV Purpose</h1>
+            <div class="type-grid">
+                <div class="type-card" onclick="initEditor('work')"><i class="fas fa-briefcase"></i><h3>Work</h3></div>
+                <div class="type-card" onclick="initEditor('academic')"><i class="fas fa-university"></i><h3>Academic</h3></div>
+                <div class="type-card" onclick="initEditor('linkedin')"><i class="fab fa-linkedin"></i><h3>LinkedIn</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <header class="builder-header">
+        <div style="font-weight: 800; color: var(--primary); font-size: 1.5rem;">CVLY PRO</div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-add" style="width: auto; padding: 8px 20px; background: #f5f3ff;" onclick="runAI()"><i class="fas fa-robot"></i> AI Score</button>
+            <button class="btn-add" style="width: auto; padding: 8px 20px; background: #10b981; color: white;" onclick="saveCV()"><i class="fas fa-save"></i> Save</button>
+            <button class="btn-add" style="width: auto; padding: 8px 20px; background: var(--primary); color: white;" onclick="window.print()">Export PDF</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <div class="editor-sidebar">
+            <div class="section-card">
+                <h3><i class="fas fa-id-card"></i> Personal Information</h3>
+                <div class="photo-uploader">
+                    <div id="uploadTrigger" onclick="document.getElementById('inPhoto').click()">
+                        <i class="fas fa-camera" id="camIcon"></i>
+                    </div>
+                    <div style="flex:1">
+                        <div style="font-size:11px; font-weight:700">Profile Photo</div>
+                        <button class="btn-add" style="margin:0; padding:2px 10px; font-size:10px" onclick="document.getElementById('inPhoto').click()">Chose File</button>
+                    </div>
+                    <input type="file" id="inPhoto" onchange="loadPhoto(this)" style="display:none">
+                </div>
+                <input type="text" id="inName" placeholder="Full Name" oninput="up()">
+                <input type="text" id="inJob" placeholder="Title" oninput="up()">
+                <div class="grid-2">
+                    <input type="email" id="inEmail" placeholder="Email" oninput="up()">
+                    <input type="tel" id="inPhone" placeholder="Phone" oninput="up()">
+                </div>
+                <input type="text" id="inLoc" placeholder="Location" oninput="up()">
+                <div class="grid-2">
+                    <input type="text" id="inLink" placeholder="LinkedIn URL" oninput="up()">
+                    <input type="text" id="inWeb" placeholder="Website" oninput="up()">
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3><i class="fas fa-quote-left"></i> Summary</h3>
+                <textarea id="inSum" rows="3" placeholder="Summary..." oninput="up()"></textarea>
+            </div>
+
+            <div class="section-card" id="side-exp">
+                <h3><i class="fas fa-briefcase"></i> Experience</h3>
+                <div id="expContainer"></div>
+                <button class="btn-add" onclick="addEntry('expContainer', 'pv-exp-list', 'Company', 'Role')">+ Add Experience</button>
+            </div>
+
+            <div class="section-card">
+                <h3><i class="fas fa-lightbulb"></i> Skills & Languages</h3>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="skillInput" placeholder="Skill/Language" onkeypress="if(event.key==='Enter') addSkill()">
+                    <button class="btn-add" onclick="addSkill()" style="width: 80px; margin-top: 0;">Add</button>
+                </div>
+                <div id="skillList" class="tag-box"></div>
+            </div>
+
+            <div class="section-card" id="side-proj">
+                <h3><i class="fas fa-code-branch"></i> Projects</h3>
+                <div id="projContainer"></div>
+                <button class="btn-add" onclick="addEntry('projContainer', 'pv-proj-list', 'Project Title', 'Tech Used')">+ Add Project</button>
+            </div>
+
+            <div class="section-card">
+                <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                <div id="certContainer"></div>
+                <button class="btn-add" onclick="addEntry('certContainer', 'pv-cert-list', 'Name', 'Organization')">+ Add Certificate</button>
+            </div>
+
+            <div class="section-card">
+                <h3><i class="fas fa-plus-circle"></i> Custom Section</h3>
+                <input type="text" id="inCustomTitle" placeholder="Section Name (e.g. Hobbies)" oninput="up()">
+                <div id="customContainer"></div>
+                <button class="btn-add" onclick="addEntry('customContainer', 'pv-custom-list', 'Title', 'Detail')">+ Add Item</button>
+            </div>
+            <div class="section-card" style="border: 2px dashed #8b5cf6; background: #f5f3ff;">
+              <h3 style="color: #7c3aed;"><i class="fas fa-magic"></i> AI Assistant</h3>
+              <p style="font-size: 11px; color: #6d28d9;">Need help? Click the button below for tips.</p>
+              <button class="btn-add" style="background: #7c3aed; color: white;" onclick="getAITips()">Get AI Advice</button>
+              <div id="aiTipsBox" style="margin-top: 10px; font-size: 12px; color: #4c1d95; line-height: 1.4;"></div>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <div class="template-bar">
+                <button class="temp-btn active" onclick="applyTmpl('modern', this)">Modern</button>
+                <button class="temp-btn" onclick="applyTmpl('classic', this)">Classic</button>
+                <button class="temp-btn" onclick="applyTmpl('royal', this)">Royal</button>
+            </div>
+
+            <div class="cv-page tmpl-modern" id="cv-sheet">
+                <img id="pPhoto" class="p-photo">
+                <div class="cv-header">
+                    <h1 id="pName" style="margin:0; font-size: 26px;">YOUR NAME</h1>
+                    <div id="pJob" style="color:var(--primary); font-weight:700; font-size: 15px;">Professional Title</div>
+                    <div style="font-size:12px; color:#64748b; margin-top:8px;">
+                        <span id="pEmail">email@example.com</span> | <span id="pPhone">Phone</span> | <span id="pLoc">Location</span>
+                    </div>
+                    <div style="font-size:11px; color:var(--primary); margin-top:4px; font-weight:600;">
+                        <span id="pLink">LinkedIn</span> | <span id="pWeb">Website</span>
+                    </div>
+                </div>
+
+                <div class="sec-title">Summary</div>
+                <p id="pSum" style="font-size:12px; line-height:1.5; white-space: pre-line; margin: 0;"></p>
+
+                <div id="pv-exp-sec">
+                    <div class="sec-title">Experience</div>
+                    <div id="pv-exp-list"></div>
+                </div>
+
+                <div id="pv-proj-sec">
+                    <div class="sec-title">Projects</div>
+                    <div id="pv-proj-list"></div>
+                </div>
+
+                <div class="sec-title">Skills & Languages</div>
+                <div id="pv-skills" class="tag-box"></div>
+
+                <div class="sec-title">Certifications</div>
+                <div id="pv-cert-list"></div>
+
+                <div id="pv-custom-sec">
+                    <div class="sec-title" id="pCustomTitle">Additional Info</div>
+                    <div id="pv-custom-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       
+        function initEditor(type) {
+            document.getElementById('typeModal').style.display = 'none';
+            if(type === 'academic') {
+                document.getElementById('side-exp').style.display = 'none';
+                document.getElementById('pv-exp-sec').style.display = 'none';
+                document.querySelector('#pv-proj-sec .sec-title').innerText = "Research & Publications";
+            } else if(type === 'linkedin') {
+                document.getElementById('side-exp').style.display = 'none';
+                document.getElementById('pv-exp-sec').style.display = 'none';
+                document.getElementById('side-proj').style.display = 'none';
+                document.getElementById('pv-proj-sec').style.display = 'none';
+            }
+        }
+
+        function up() {
+            document.getElementById('pName').innerText = document.getElementById('inName').value || "YOUR NAME";
+            document.getElementById('pJob').innerText = document.getElementById('inJob').value || "Title";
+            document.getElementById('pEmail').innerText = document.getElementById('inEmail').value || "email@example.com";
+            document.getElementById('pPhone').innerText = document.getElementById('inPhone').value || "Phone";
+            document.getElementById('pLoc').innerText = document.getElementById('inLoc').value || "Location";
+            document.getElementById('pLink').innerText = document.getElementById('inLink').value || "LinkedIn";
+            document.getElementById('pWeb').innerText = document.getElementById('inWeb').value || "Website";
+            document.getElementById('pSum').innerText = document.getElementById('inSum').value || "";
+            document.getElementById('pCustomTitle').innerText = document.getElementById('inCustomTitle').value || "Additional Information";
+        }
+
+        let tags = [];
+        function addSkill() {
+            const input = document.getElementById('skillInput');
+            if(input.value.trim() !== "") {
+                tags.push(input.value.trim());
+                input.value = "";
+                renderTags();
+            }
+        }
+
+        function renderTags() {
+            const list = document.getElementById('skillList');
+            const preview = document.getElementById('pv-skills');
+            list.innerHTML = preview.innerHTML = '';
+            tags.forEach((t, i) => {
+                list.innerHTML += `<span class="tag">${t} <i class="fas fa-times" onclick="removeSkill(${i})" style="cursor:pointer; color:red;"></i></span>`;
+                preview.innerHTML += `<span class="tag">${t}</span>`;
+            });
+        }
+
+        function removeSkill(index) {
+            tags.splice(index, 1);
+            renderTags();
+        }
+
+        function addEntry(conId, pvListId, p1, p2) {
+            const id = Date.now();
+            document.getElementById(conId).insertAdjacentHTML('beforeend', `
+                <div id="f-${id}" class="section-card" style="background:white; border-style:dashed;">
+                    <input type="text" placeholder="${p1}" oninput="syncEntry(${id})">
+                    <input type="text" placeholder="${p2}" oninput="syncEntry(${id})">
+                    <textarea placeholder="Description" oninput="syncEntry(${id})"></textarea>
+                    <button onclick="remEntry(${id})" style="color:red; background:none; border:none; cursor:pointer;">&times; Remove</button>
+                </div>`);
+            
+            document.getElementById(pvListId).insertAdjacentHTML('beforeend', `
+                <div id="p-${id}" style="margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between;"><strong class="t1"></strong></div>
+                    <div class="t2" style="font-size:12px; color:var(--primary); font-weight:600;"></div>
+                    <p class="t3" style="font-size:11px; margin:3px 0; color:#475569; white-space: pre-line;"></p>
+                </div>`);
+        }
+
+        function syncEntry(id) {
+            const container = document.getElementById(`f-${id}`);
+            const inputs = container.querySelectorAll('input, textarea');
+            const preview = document.getElementById(`p-${id}`);
+            preview.querySelector('.t1').innerText = inputs[0].value;
+            preview.querySelector('.t2').innerText = inputs[1].value;
+            preview.querySelector('.t3').innerText = inputs[2].value;
+        }
+
+        function remEntry(id) { 
+            document.getElementById(`f-${id}`).remove(); 
+            document.getElementById(`p-${id}`).remove(); 
+        }
+
+        function applyTmpl(t, btn) { 
+            document.getElementById('cv-sheet').className = 'cv-page tmpl-' + t; 
+            document.querySelectorAll('.temp-btn').forEach(b => b.classList.remove('active')); 
+            btn.classList.add('active'); 
+        }
+
+        function loadPhoto(input) { 
+            if (input.files && input.files[0]) { 
+                const r = new FileReader(); 
+                r.onload = e => { 
+                    const img = document.getElementById('pPhoto'); 
+                    img.src = e.target.result; 
+                    img.style.display = 'block'; 
+                    const trig = document.getElementById('uploadTrigger');
+                    trig.style.backgroundImage = `url(${e.target.result})`;
+                    document.getElementById('camIcon').style.display = 'none';
+                }; 
+                r.readAsDataURL(input.files[0]); 
+            } 
+        }
+
+
+function saveCV() {
+    const experiences = [];
+    document.querySelectorAll('#expContainer > div').forEach(div => {
+        const ins = div.querySelectorAll('input, textarea');
+        // نتأكد أن الحقول موجودة قبل القراءة
+        if(ins.length >= 2 && (ins[0].value || ins[1].value)) {
+            experiences.push({
+                c1: ins[0].value,
+                c2: ins[1].value,
+                c3: ins[2] ? ins[2].value : "" // تأمين في حال عدم وجود textarea
+            });
+        }
+    });
+
+    const cvFullData = {
+        name: document.getElementById('inName').value || "My CV",
+        job: document.getElementById('inJob').value || "Professional Title",
+        email: document.getElementById('inEmail').value || "",
+        phone: document.getElementById('inPhone').value || "",
+        location: document.getElementById('inLoc').value || "",
+        link: document.getElementById('inLink').value || "",
+        web: document.getElementById('inWeb').value || "",
+        summary: document.getElementById('inSum').value || "",
+        skills: typeof tags !== 'undefined' ? tags : [], // التأكد من وجود المتغير tags
+        exp: experiences,
+        date: new Date().toLocaleDateString()
+    };
+
+    let list = JSON.parse(localStorage.getItem('myCVs')) || [];
+    
+    // جلب الـ Index والتأكد من أنه رقم
+    let editIndex = localStorage.getItem('editingIndex');
+
+    // التصحيح الجوهري هنا: نتحقق هل القيمة ليست null وليست نصاً فارغاً
+    if (editIndex !== null && editIndex !== "") {
+        list[parseInt(editIndex)] = cvFullData; // نحوله لرقم ونحدث البيانات
+    } else {
+        list.push(cvFullData); // إضافة CV جديد
+    }
+
+    // حفظ القائمة ومسح الـ index لكي لا يفتح التعديل بالخطأ المرة القادمة
+    localStorage.setItem('myCVs', JSON.stringify(list));
+    localStorage.removeItem('editingIndex'); 
+
+    alert("Done! Your CV has been saved.");
+    window.location.href = "cv-list.html";
+}
+           window.onload = function() {
+    const editIndex = localStorage.getItem('editingIndex');
+    if (editIndex !== null) {
+        const list = JSON.parse(localStorage.getItem('myCVs')) || [];
+        const data = list[editIndex];
+
+        if (data) {
+            // إخفاء نافذة الاختيار لأن الـ CV قديم
+            document.getElementById('typeModal').style.display = 'none';
+
+            // ملء الحقول الأساسية
+            document.getElementById('inName').value = data.name || "";
+            document.getElementById('inJob').value = data.job || "";
+            document.getElementById('inEmail').value = data.email || "";
+            document.getElementById('inPhone').value = data.phone || "";
+            document.getElementById('inLoc').value = data.location || "";
+            document.getElementById('inLink').value = data.link || "";
+            document.getElementById('inWeb').value = data.web || "";
+            document.getElementById('inSum').value = data.summary || "";
+
+            // استرجاع المهارات
+            if (data.skills) {
+                tags = data.skills;
+                renderTags();
+            }
+
+            // استرجاع الخبرات
+            if (data.exp) {
+                data.exp.forEach(item => {
+                    // نستخدم دالة addEntry الأصلية لإضافة الحقول
+                    addEntry('expContainer', 'pv-exp-list', 'Company', 'Role');
+                    
+                    // نملأ آخر حقول تمت إضافتها بالبيانات
+                    const lastEntry = document.querySelector('#expContainer').lastElementChild;
+                    const inputs = lastEntry.querySelectorAll('input, textarea');
+                    inputs[0].value = item.c1;
+                    inputs[1].value = item.c2;
+                    inputs[2].value = item.c3;
+                    
+                    // تحديث المعاينة لهذه الخبرة (نحتاج لاستخراج الـ ID من الـ div)
+                    const id = lastEntry.id.replace('f-', '');
+                    syncEntry(id);
+                });
+            }
+
+            // تحديث المعاينة النهائية للمعلومات الأساسية
+            up(); 
+        }
+    }
+};
+       </script>
+   </body>
+</html>
