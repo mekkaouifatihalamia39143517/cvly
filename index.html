@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVLY - Create Professional Resumes</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column !important; 
+                gap: 15px;
+                padding: 15px 10px;
+                text-align: center;
+            }
+
+            .header-actions {
+                display: flex;
+                flex-wrap: wrap; 
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .btn-login, .btn-signup, .lang-select {
+                padding: 8px 12px !important;
+                font-size: 13px !important;
+                min-width: auto !important;
+            }
+
+            .hero {
+                margin-top: 20px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-file-signature"></i>
+                <h1>CVLY</h1>
+            </div>
+            <div class="header-actions">
+                <select id="languageSelect" class="lang-select">
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                    <option value="fr">Français</option>
+                </select>
+                <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="signup.html" class="btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Create Your Professional CV in Minutes</h1>
+                <p class="hero-subtitle">No Word or Canva needed - Everything in one place!</p>
+                <div class="hero-stats">
+                    <span><i class="fas fa-users"></i> 50K+ Users</span>
+                    <span><i class="fas fa-file-pdf"></i> 100K+ CVs</span>
+                </div>
+                <div class="hero-buttons">
+                  <a href="cv-builder.html" class="btn-primary">
+                     <i class="fas fa-rocket"></i> Start Building Now
+                  </a>
+                    <a href="#features" class="btn-secondary">
+                        <i class="fas fa-star"></i> See Features
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="cv-preview">
+                    <div class="cv-mockup">
+                        <div class="cv-header-mockup">
+                            <h3>John Doe</h3>
+                            <p>Software Developer</p>
+                        </div>
+                        <div class="cv-section-mockup">
+                            <h4><i class="fas fa-briefcase"></i> Experience</h4>
+                            <p>Full Stack Developer - ABC Corp</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose CVLY?</h2>
+                <p>Everything you need to create a perfect resume</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Live Preview</h3>
+                    <p>See changes instantly as you type</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>PDF Export</h3>
+                    <p>Download print-ready PDF in one click</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>10+ Templates</h3>
+                    <p>Choose from professional designs</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Analysis</h3>
+                    <p>Get smart suggestions to improve your CV</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Cloud Save</h3>
+                    <p>Save & access your CVs anywhere</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Multi-Language</h3>
+                    <p>Create CVs in English, Arabic, French</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Preview -->
+    <section class="templates-preview">
+        <div class="container">
+            <div class="section-header">
+                <h2>Professional Templates</h2>
+                <p>Choose your perfect style</p>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card simple">
+                    <div class="template-image">
+                        <i class="fas fa-th"></i>
+                    </div>
+                    <h3>Simple</h3>
+                    <p>Clean and minimal design</p>
+                </div>
+                <div class="template-card modern">
+                    <div class="template-image">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Modern</h3>
+                    <p>Trendy and stylish</p>
+                </div>
+                <div class="template-card professional">
+                    <div class="template-image">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>Professional</h3>
+                    <p>Corporate ready design</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Create Your Dream CV?</h2>
+            <a href="cv-builder.html" class="btn-primary btn-large">Start Free - No Credit Card</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fas fa-file-signature"></i>
+                        <h3>CVLY</h3>
+                    </div>
+                    <p>Create professional resumes in minutes</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Templates</a>
+                    <a href="#">Pricing</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Careers</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CVLY. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+   <script src="js/main.js"></script>
+
+    <script>
+        function startFlow(type) {
+            const user = localStorage.getItem('cvly_user'); 
+            if (!user) {
+                alert("Please login or create an account to start building your CV!");
+                window.location.href = "login.html";
+                return;
+            }
+            localStorage.setItem('selectedTemplate', type);
+            localStorage.removeItem('editingIndex'); 
+            window.location.href = "cv-builder.html";
+        }
+    </script>
+</body>
+</html>
