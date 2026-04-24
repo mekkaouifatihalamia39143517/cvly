@@ -8,84 +8,253 @@
     <title>CVLY PRO - Professional Full Builder</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary: #2563eb; --bg: #f1f5f9; --text: #1e293b; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        @media (max-width: 768px) {
-           .builder-header {
-               padding: 5px 10px;
-           }
-           .builder-header .logo h1 {
-               font-size: 1.2rem;
-           }
-           .btn-add {
-               font-size: 11px;
-               padding: 5px 8px;
-           }
-       }
-        @media print {
-            .builder-header, .editor-sidebar, .template-bar, #typeModal { display: none !important; }
-            body, .main-layout, .preview-container { background: white !important; display: block !important; overflow: visible !important; height: auto !important; }
-            .cv-page { box-shadow: none !important; margin: 0 !important; width: 100% !important; border: none !important; }
+
+</head>
+<style>
+    /* --- المتغيرات والأساسيات --- */
+    :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+    /* تحديد حجم صورة البروفايل داخل الـ CV */
+.p-photo {
+    width: 120px;    /* عرض الصورة */
+    height: 120px;   /* طول الصورة */
+    border-radius: 12px; /* زوايا دائرية شوية */
+    object-fit: cover; /* باش الصورة ما تتكسلش */
+    float: right;    /* تجي على اليمين */
+    margin-left: 20px;
+    border: 2px solid #eee;
+    display: none;   /* تبقى مخفية حتى ترفع صورة */
+}
+    body { 
+        margin: 0; 
+        font-family: 'Inter', sans-serif; 
+        background: var(--bg); 
+        display: flex; 
+        flex-direction: column; 
+        min-height: 100vh;
+        /* منع السكرول الأفقي المزعج */
+        overflow-x: hidden; 
+    }
+
+    /* الهيدر */
+    .builder-header { 
+        height: 70px;
+        background: white; 
+        padding: 0 20px; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+        z-index: 1000;
+        position: sticky;
+        top: 0;
+    }
+
+    /* تقسيم الشاشة الرئيسي */
+    .main-layout {
+        display: flex;
+        flex-direction: row; /* جانب لجانب في الـ PC */
+        flex: 1;
+        height: calc(100vh - 70px);
+    }
+
+    /* المحرر (اليسار) */
+    .editor-sidebar {
+        width: 450px;
+        min-width: 450px;
+        height: 100%;
+        overflow-y: auto;
+        background: white;
+        border-right: 1px solid #e2e8f0;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* حاوية المعاينة (اليمين) */
+    .preview-container {
+        flex: 1;
+        background: #525659;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 20px;
+        overflow-y: auto;
+        position: relative;
+    }
+     .template-bar {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+}
+
+.temp-btn {
+    padding: 8px 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.temp-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+/* --- قالب Modern (الافتراضي) --- */
+.tmpl-modern .sec-title { 
+    color: var(--primary); 
+    border-bottom: 2px solid #eee; 
+    text-transform: uppercase; 
+    font-weight: 800;
+    margin: 15px 0 10px;
+}
+
+/* --- قالب Classic (الرسمي) --- */
+.tmpl-classic { 
+    font-family: 'Times New Roman', serif !important; 
+}
+.tmpl-classic .cv-header { 
+    text-align: center; 
+    border-bottom: 2px solid #333; 
+    padding-bottom: 15px; 
+}
+.tmpl-classic .sec-title { 
+    text-align: center; 
+    border-top: 1px solid #333; 
+    border-bottom: 1px solid #333; 
+    margin: 15px 0; 
+    padding: 5px; 
+    background: #f9f9f9;
+}
+
+/* --- قالب Royal (الفخم) --- */
+.tmpl-royal {
+    font-family: 'Playfair Display', serif;
+}
+.tmpl-royal .cv-header { 
+    background: #1e293b !important; 
+    color: white !important; 
+    padding: 30px !important; 
+    margin: -20mm -20mm 20px -20mm !important; /* يغطي عرض الورقة بالكامل */
+}
+.tmpl-royal .sec-title { 
+    border-left: 5px solid #fbbf24; 
+    padding-left: 10px; 
+    background: #fef3c7; 
+    color: #1e293b; 
+    font-size: 14px; 
+}
+
+    /* ورقة الـ CV (حجم A4) */
+    .cv-page {
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        padding: 20mm;
+        box-sizing: border-box;
+        transition: transform 0.3s ease;
+    }
+
+    /* --- تنسيقات إضافية --- */
+    .section-card { background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+    .section-card input, .section-card textarea { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+    .btn-add { cursor: pointer; border: none; border-radius: 8px; transition: 0.3s; font-weight: 600; margin-top: 10px; }
+    .tag-box { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .tag { background: #e2e8f0; padding: 4px 10px; border-radius: 5px; font-size: 12px; }
+
+    /* --- تعديلات التيليفون (Mobile) - الأهم هنا --- */
+    @media (max-width: 768px) {
+        .main-layout {
+            flex-direction: column; /* فوق بعض في التيليفون */
+            height: auto;
+        }
+
+        .editor-sidebar {
+            width: 100% !important;
+            min-width: 100%;
+            height: auto;
+            border-right: none;
+        }
+
+        .preview-container {
+            width: 100%;
+            padding: 20px 5px;
+            background: #f1f5f9;
+            overflow: visible;
+        }
+
+        /* تصغير الورقة لتناسب عرض شاشة التيليفون */
+        .cv-page { 
+            width: 210mm !important; /* نحافظ على العرض الأصلي */
+            /* نستخدم الـ Scale لتصغير العرض بصرياً ليناسب الموبايل */
+            transform: scale(0.45); 
+            transform-origin: top center; 
+            margin-bottom: -500px; /* تعويض الفراغ الناتج عن التصغير */
+        }
+
+        .builder-header {
+            height: auto;
+            flex-direction: column;
+            padding: 15px;
+            gap: 15px;
         }
         
-        /* Modal Selection */
-        #typeModal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal-content { background: white; padding: 40px; border-radius: 24px; text-align: center; max-width: 850px; width: 90%; }
-        .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 30px; }
-        .type-card { border: 2px solid #f1f5f9; padding: 25px; border-radius: 16px; cursor: pointer; transition: 0.3s; }
-        .type-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .type-card i { font-size: 40px; color: var(--primary); margin-bottom: 15px; }
+        .builder-header div { width: 100%; justify-content: center; }
+        
+        .type-grid { grid-template-columns: 1fr; } 
+    }
 
-        /* Layout */
-        .builder-header { background: white; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; }
-        .main-layout {
-            display: flex;
-            flex-direction: row; 
-            flex: 1;
-            overflow: hidden;
-        }
+    /* ستايل الطباعة */
+    @media print {
+        .builder-header, .editor-sidebar, .template-bar, #typeModal { display: none !important; }
+        body, .main-layout, .preview-container { background: white !important; display: block !important; overflow: visible !important; }
+        .cv-page { box-shadow: none !important; margin: 0 !important; width: 100% !important; transform: scale(1) !important; }
+    }
+    /* هذا الكود يضمن بقاء النافذة فوق كل شيء وفي المنتصف */
+#typeModal { 
+    position: fixed; /* يبقى ثابتاً حتى لو تحركت الصفحة */
+    top: 0;
+    left: 0;
+    width: 100vw; /* عرض الشاشة بالكامل */
+    height: 100vh; /* طول الشاشة بالكامل */
+    background: rgba(15, 23, 42, 0.95); /* خلفية داكنة شفافة */
+    z-index: 99999; /* رقم مرتفع جداً ليكون فوق الهيدر والمحرر */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    backdrop-filter: blur(8px); /* تأثير الضبابية للخلفية */
+}
 
-        @media (max-width: 768px) {
-               body {
-                  overflow-y: auto; 
-               }
-               .main-layout {
-                    flex-direction: column; 
-                    overflow: visible;
-               }
-               .editor-sidebar {
-                    width: 100% !important; 
-                    border-right: none;
-                    padding: 10px;
-               }
-               .preview-container {
-                    width: 100% !important;
-                    padding: 10px;
-                    background: #f1f5f9; 
-               }
-              .cv-page {
-                    width: 100% !important; 
-                    min-height: auto;
-                    padding: 15px;
-                    transform: scale(0.9); 
-                    transform-origin: top center;
-                }
-           }
-        /* Templates Styles */
-        .tmpl-modern .sec-title { color: var(--primary); border-bottom: 2px solid #eee; text-transform: uppercase; font-size: 13px; margin: 18px 0 8px; font-weight: 800; letter-spacing: 1px;}
-        .tmpl-classic { font-family: 'Times New Roman', serif; }
-        .tmpl-classic .cv-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .tmpl-classic .sec-title { text-align: center; border-top: 1px solid #333; border-bottom: 1px solid #333; margin: 15px 0; padding: 4px; font-style: italic; font-size: 14px; }
-        .tmpl-royal { font-family: 'Playfair Display', serif; }
-        .tmpl-royal .cv-header { background: #1e293b; color: white; padding: 30px; margin: -20mm -20mm 20px -20mm; }
-        .tmpl-royal .sec-title { border-left: 5px solid #fbbf24; padding-left: 10px; background: #fef3c7; color: #1e293b; font-size: 14px; }
+.modal-content { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 20px; 
+    text-align: center; 
+    max-width: 600px; 
+    width: 90%; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
 
-        .p-photo { width: 110px; height: 110px; border-radius: 12px; object-fit: cover; float: right; display: none; border: 2px solid #eee; }
-        .tag-box { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-        .tag { background: #f1f5f9; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 8px;}
-    </style>
-</head>
+.type-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; /* 3 أعمدة في الـ PC */
+    gap: 15px; 
+    margin-top: 20px; 
+}
+
+@media (max-width: 768px) {
+    .type-grid { 
+        grid-template-columns: 1fr; /* عمود واحد في التيليفون */
+    }
+    .modal-content {
+        padding: 20px;
+    }
+}
+</style>
 <body>
 
     <div id="typeModal">
