@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVLY - Create Professional Resumes</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -84,7 +85,6 @@
                 <select id="languageSelect" class="lang-select">
                     <option value="en">English</option>
                     <option value="ar">العربية</option>
-                    <option value="fr">Français</option>
                 </select>
                 <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</a>
                 <a href="signup.html" class="btn-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
@@ -237,21 +237,26 @@
                 </div>
                 <div class="footer-links">
                     <h4>Product</h4>
-                    <a href="#">Features</a>
-                    <a href="#">Templates</a>
-                    <a href="#">Pricing</a>
+                    <a href="#features">Features</a>
+                    <a href="templates.html">Templates</a>
+                    <a href="pricing.html">Pricing</a>
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
-                    <a href="#">Careers</a>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="careers.html">Careers</a>
                 </div>
                 <div class="footer-links">
                     <h4>Support</h4>
-                    <a href="#">Help Center</a>
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
+                    <a href="help.html">Help Center</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -274,6 +279,7 @@
             localStorage.removeItem('editingIndex'); 
             window.location.href = "cv-builder.html";
         }
+
     </script>
 </body>
 </html>
