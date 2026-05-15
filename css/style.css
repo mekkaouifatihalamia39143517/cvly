@@ -249,6 +249,28 @@ body {
     font-size: 1.1rem;
 }
 
+.entry-item {
+    page-break-inside: avoid;
+}
+.cv-sheet {
+    height: auto;
+    overflow: visible;
+}
+
+@media print {
+    html, body {
+        height: auto;
+    }
+
+    .cv-sheet {
+        page-break-after: auto;
+        overflow: visible;
+    }
+
+    .entry-item {
+        page-break-inside: avoid;
+    }
+}
 /* Features */
 .features {
     padding: 120px 0;
@@ -407,7 +429,15 @@ body {
     color: #64748b;
     font-size: 1.1rem;
 }
-
+.tmpl-stylish .right-col,
+.tmpl-minimalist,
+.tmpl-executive {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+.right-col {
+    min-width: 0;
+}
 /* CTA */
 .cta {
     padding: 120px 0;
@@ -568,7 +598,7 @@ body {
         text-align: center;
     }
 }
-/* 🔥 CV Builder Enhanced Styles */
+/*  CV Builder Enhanced Styles */
 .cv-preview-container {
     font-size: 0.95rem;
     line-height: 1.6;
@@ -776,7 +806,7 @@ body {
     .form-grid { grid-template-columns: 1fr; }
     .cv-preview-container { padding: 24px 16px; font-size: 0.9rem; }
 }
-/* 🔥 Auth Pages - Complete Styling */
+/*  Auth Pages - Complete Styling */
 .auth-page {
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1066,4 +1096,19 @@ body {
 .type-card:hover {
   border-color: #007bff;
   transform: scale(1.05);
+}
+.social-links{
+    display:flex;
+    gap:15px;
+    margin-top:15px;
+}
+
+.social-links a{
+    color:white;
+    font-size:18px;
+    transition:0.3s;
+}
+
+.social-links a:hover{
+    color:#2563eb;
 }
